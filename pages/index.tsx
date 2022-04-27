@@ -7,18 +7,24 @@ import Yotsu from '../components/yotsu';
 import Table from '../components/table'
 
 export default function Home() {
-  const [isOpening, setIsOpening] = useState(true);
-  const [command, setCommand] = useState('$ ')
+  const [value, setValue] = useState('$ ');
 
-  const print = (e) => {
-    if (e.key == 'Enter') {
-      console.log('Enterが押された！')
-      // だからここで一旦文字列の処理を行う
+  const enter = (e) => {
+    if(e.key == 'Enter'){
+      const splitedInputValue = e.target.value.split('\n');
+      const command = splitedInputValue.slice(-1)[0].replace(/\$ /g, '');
+      if(command == 'ls') splitedInputValue.push('/MyHP','memo.txt','readme.md');
+      else if(command != '') splitedInputValue.push('command not found: '+command);
+      setValue(splitedInputValue.join('\n'));
     }
-  };
+  }
 
-  const handleChangeCommad = (e) => {
-    setCommand("$ "+e.target.value.replace(/\$/g, '').replace(/\ /g, ''))
+  const handleChangeValue = (e) => {
+    const splitedInputValue = e.target.value.split('\n');
+    const unfixedLast = splitedInputValue.pop();
+    const fixedLast = '$ ' + unfixedLast.replace(/\$/g, '').replace(/\ /g, '');  
+    splitedInputValue.push(fixedLast);
+    setValue(splitedInputValue.join('\n'));
   }
 
   return (
@@ -29,19 +35,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>input</h1>
-      <p>console.log(url);</p>
+      <h1>ls, cd, cat</h1>
 
       <textarea
         className={styles.input}
-        onKeyPress={print}
-        onChange={handleChangeCommad}
-        value={command}
+        onKeyPress={enter} // keyを押したとき(変化は起こってない)
+        onChange={handleChangeValue} // 改行が行われて変化が起こったとき
+        value={value}
       />
-      
-      {/* {isOpening && <Message/>}
-      {!isOpening && <Yotsu/>}
-      <Table></Table> */}
     </div>
   )
 }
