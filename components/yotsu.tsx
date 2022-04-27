@@ -9,7 +9,7 @@ export default function Yotsu() {
 
   return (
     <div className={styles.container}>
-      <Image src={yotsu} alt='neko' className={styles.yotsu}/>
+      <Image src={yotsu} alt='neko' />
     </div>
   )
 }

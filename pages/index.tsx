@@ -8,13 +8,18 @@ import Table from '../components/table'
 
 export default function Home() {
   const [isOpening, setIsOpening] = useState(true);
-  useEffect(() => {
-    if (window.location.pathname === "/") {
-      setTimeout(() => {
-        setIsOpening(false);
-      }, 2000);
+  const [command, setCommand] = useState('$ ')
+
+  const print = (e) => {
+    if (e.key == 'Enter') {
+      console.log('Enterが押された！')
+      // だからここで一旦文字列の処理を行う
     }
-  },[])
+  };
+
+  const handleChangeCommad = (e) => {
+    setCommand("$ "+e.target.value.replace(/\$/g, '').replace(/\ /g, ''))
+  }
 
   return (
     <div className={styles.container}>
@@ -24,9 +29,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Table></Table>
+      <h1>input</h1>
+      <p>console.log(url);</p>
+
+      <textarea
+        className={styles.input}
+        onKeyPress={print}
+        onChange={handleChangeCommad}
+        value={command}
+      />
+      
       {/* {isOpening && <Message/>}
-      {!isOpening && <Yotsu/>} */}
+      {!isOpening && <Yotsu/>}
+      <Table></Table> */}
     </div>
   )
 }
