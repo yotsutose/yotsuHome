@@ -9,22 +9,31 @@ import Table from '../components/table'
 export default function Home() {
   const [value, setValue] = useState('$ ');
 
-  const enter = (e) => {
+  const handleKeyPress = e => {
     if(e.key == 'Enter'){
       const splitedInputValue = e.target.value.split('\n');
-      const command = splitedInputValue.slice(-1)[0].replace(/\$ /g, '');
-      if(command == 'ls') splitedInputValue.push('/MyHP','memo.txt','readme.md');
-      else if(command != '') splitedInputValue.push('command not found: '+command);
+      const line = splitedInputValue.slice(-1)[0].replace(/\$/, '').replace(/\s+/, '');
+      splitedInputValue.push.apply(splitedInputValue, parse(line));
       setValue(splitedInputValue.join('\n'));
     }
   }
 
-  const handleChangeValue = (e) => {
+  const handleChangeValue = e => {
     const splitedInputValue = e.target.value.split('\n');
     const unfixedLast = splitedInputValue.pop();
-    const fixedLast = '$ ' + unfixedLast.replace(/\$/g, '').replace(/\ /g, '');  
+    const fixedLast = '$ ' + unfixedLast.replace(/\$/g, '').replace(/\ /, '');  
     splitedInputValue.push(fixedLast);
     setValue(splitedInputValue.join('\n'));
+  }
+
+  const parse = (line: string) => {
+    const splitedLine = line.split(/\s+/g);
+    console.log(splitedLine);
+    if(splitedLine.length == 0) return [''];
+    if(splitedLine.length == 1 && splitedLine[0] == 'ls') return ['/MyHp', 'memo.txt', 'README.md'];
+    if(splitedLine.length == 2 && splitedLine[0] == 'cd') return ['cd'];
+    if(splitedLine.length == 2 && splitedLine[0] == 'cat') return ['cat'];
+    return ['command not found: ' + line];
   }
 
   return (
@@ -39,7 +48,7 @@ export default function Home() {
 
       <textarea
         className={styles.input}
-        onKeyPress={enter} // keyを押したとき(変化は起こってない)
+        onKeyPress={handleKeyPress} // keyを押したとき(変化は起こってない)
         onChange={handleChangeValue} // 改行が行われて変化が起こったとき
         value={value}
       />
