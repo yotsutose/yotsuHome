@@ -8,6 +8,9 @@ import Table from '../components/table'
 
 export default function Home() {
   const [value, setValue] = useState('$ ');
+  const [pwd, setPwd] = useState('~');
+  const filenames = {'~': ['/dir', 'README.md'],
+                    '~/dir': ['index.html', 'works.html', 'history.html', 'memo.txt']};
 
   const handleKeyPress = e => {
     if(e.key == 'Enter'){
@@ -15,6 +18,25 @@ export default function Home() {
       const line = splitedInputValue.slice(-1)[0].replace(/\$/, '').replace(/\s+/, '');
       splitedInputValue.push.apply(splitedInputValue, parse(line));
       setValue(splitedInputValue.join('\n'));
+    }
+    if(e.key == 'Tab'){
+      e.preventDefault();
+      const splitedInputValue = e.target.value.split('\n');
+      console.log(splitedInputValue);
+      const unfixedLast = splitedInputValue.pop();
+      const fixedLast = '$ ' + unfixedLast.replace(/\$\s+/, '');
+      const splitedLine = fixedLast.split(/\s+/g);
+      if((splitedLine[0] == 'ls'|| splitedLine[0] == 'cd') && splitedLine.length == 2){
+        for(let filename in filenames[pwd]){
+          if(!filename.indexOf(splitedLine[1])){
+            unfixedLast.replace(splitedLine[1], filename);
+            splitedInputValue.push(unfixedLast);
+            setValue(splitedInputValue.join('\n'));
+          }
+        }
+      }
+      // もしcdやcatの補完があるならやろう
+      // bug
     }
   }
 
@@ -29,11 +51,29 @@ export default function Home() {
   const parse = (line: string) => {
     const splitedLine = line.split(/\s+/g);
     console.log(splitedLine);
-    if(splitedLine.length == 0) return [''];
-    if(splitedLine.length == 1 && splitedLine[0] == 'ls') return ['/MyHp', 'memo.txt', 'README.md'];
-    if(splitedLine.length == 2 && splitedLine[0] == 'cd') return ['cd'];
-    if(splitedLine.length == 2 && splitedLine[0] == 'cat') return ['cat'];
+    if(splitedLine[0] == '') return [];
+    if(splitedLine[0] == 'pwd') return [pwd];
+    if(splitedLine[0] == 'ls') return ls(splitedLine);
+    if(splitedLine[0] == 'cd') return cd(splitedLine);
+    if(splitedLine[0] == 'cat') return ['cat'];
     return ['command not found: ' + line];
+  }
+
+  const ls = (splitedLine: string[]) => {
+    if(splitedLine.length != 1) return ['No such file or directory'];
+    return filenames[pwd];
+  }
+
+  const cd = (splitedLine: string[]) => {
+    if(splitedLine[1] == 'dir' && pwd == '~'){
+      setPwd(pwd+'/dir');
+      return [];
+    }
+    else if((splitedLine[1] == '..' || splitedLine[1] == '~') && pwd == '~/dir'){
+      setPwd('~');
+      return [];
+    }
+    else return ['not found derectory'];
   }
 
   return (
@@ -44,14 +84,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>ls, cd, cat</h1>
+      <h1>Hello...</h1>
+      <h3>Judge as an engineer</h3>
 
       <textarea
         className={styles.input}
-        onKeyPress={handleKeyPress} // keyを押したとき(変化は起こってない)
+        onKeyDown={handleKeyPress} // keyを押したとき(変化は起こってない)
         onChange={handleChangeValue} // 改行が行われて変化が起こったとき
         value={value}
       />
+
     </div>
   )
 }
