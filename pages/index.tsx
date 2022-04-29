@@ -86,8 +86,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Hello....</h1>
-      <h3>Judge as an engineer</h3>
+      <h1>Create yourself</h1>
+      <h3>Example</h3>
+      <p>
+        $ cat README.md↵
+      </p>
 
       <textarea
         className={styles.input}
