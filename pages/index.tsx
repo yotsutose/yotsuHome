@@ -9,7 +9,7 @@ import Table from '../components/table'
 export default function Home() {
   const [value, setValue] = useState('$ ');
   const [pwd, setPwd] = useState('~');
-  const filenames = {'~': ['/dir', 'README.md'],
+  const filenames = {'~': ['dir', 'README.md'],
                     '~/dir': ['index.html', 'works.html', 'history.html', 'memo.txt']};
 
   const handleKeyPress = e => {
@@ -22,21 +22,18 @@ export default function Home() {
     if(e.key == 'Tab'){
       e.preventDefault();
       const splitedInputValue = e.target.value.split('\n');
-      console.log(splitedInputValue);
-      const unfixedLast = splitedInputValue.pop();
-      const fixedLast = '$ ' + unfixedLast.replace(/\$\s+/, '');
-      const splitedLine = fixedLast.split(/\s+/g);
-      if((splitedLine[0] == 'ls'|| splitedLine[0] == 'cd') && splitedLine.length == 2){
-        for(let filename in filenames[pwd]){
+      let unfixedLast = splitedInputValue.pop();
+      const fixedLast = unfixedLast.replace(/\$\s+/, ''); // 先頭消す
+      const splitedLine = fixedLast.split(/\s+/g); // spaceで分ける
+      if((splitedLine[0] == 'cat'|| splitedLine[0] == 'cd') && splitedLine.length == 2){
+        for(let filename of filenames[pwd]){
           if(!filename.indexOf(splitedLine[1])){
-            unfixedLast.replace(splitedLine[1], filename);
-            splitedInputValue.push(unfixedLast);
+            const replacedLast = unfixedLast.substring(0,unfixedLast.lastIndexOf(splitedLine[1])) + filename;
+            splitedInputValue.push(replacedLast);
             setValue(splitedInputValue.join('\n'));
           }
         }
       }
-      // もしcdやcatの補完があるならやろう
-      // bug
     }
   }
 
@@ -50,7 +47,6 @@ export default function Home() {
 
   const parse = (line: string) => {
     const splitedLine = line.split(/\s+/g);
-    console.log(splitedLine);
     if(splitedLine[0] == '') return [];
     if(splitedLine[0] == 'pwd') return [pwd];
     if(splitedLine[0] == 'ls') return ls(splitedLine);
@@ -74,6 +70,10 @@ export default function Home() {
       return [];
     }
     else return ['not found derectory'];
+  }
+
+  const cat = (splitedLine: string[]) => {
+    
   }
 
   return (
