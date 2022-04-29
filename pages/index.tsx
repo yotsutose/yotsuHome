@@ -73,7 +73,7 @@ export default function Home() {
   }
 
   const cat = (splitedLine: string[]) => {
-    
+
   }
 
   return (
@@ -84,7 +84,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Hello...</h1>
+      <h1>Hello....</h1>
       <h3>Judge as an engineer</h3>
 
       <textarea
