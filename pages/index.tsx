@@ -4,13 +4,16 @@ import styles from '../styles/Home.module.css'
 import React, {useEffect, useState} from 'react';
 import Message from '../components/message';
 import Yotsu from '../components/yotsu';
-import Table from '../components/table'
+import Table from '../components/table';
+import Card from '../components/card';
 
 export default function Home() {
   const [value, setValue] = useState('$ ');
   const [pwd, setPwd] = useState('~');
   const filenames = {'~': ['dir', 'README.md'],
-                    '~/dir': ['index.html', 'works.html', 'history.html', 'memo.txt']};
+                    '~/dir': ['index.html', 'works.html', 'history.html', 'skills.html']};
+  const sts: string[] = [];
+  const [show, setShow] = useState([]);
 
   const handleKeyPress = e => {
     if(e.key == 'Enter'){
@@ -73,10 +76,26 @@ export default function Home() {
   }
 
   const cat = (splitedLine: string[]) => {
-    for(let filename of filenames[pwd]){
-      if(splitedLine[1]==filename) return [filename+"のfileの中身"];
+    let filename: string;
+    for(filename of filenames[pwd]){
+      if(splitedLine[1]!=filename) continue;
+      if(filename=='dir') continue;
+      if(filename=='README.md') return ['You can use commands (e.g. ls and cd and cat).'];
+      let memo = show;
+      memo.push(filename);
+      setShow(memo);
+      return [];
     }
     return ['No such file or directory'];
+  }
+
+  const Cards = ({ show }) => {
+    const list = show.map(s => {
+      return (
+        <Card filename={s}></Card>
+      );
+    });
+    return list;
   }
 
   return (
@@ -86,9 +105,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Create yourself</h1>
+      <h1 style={{"padding": "2rem 0"}}></h1>
       <h3>Example</h3>
       <p>
+        $ ls<br/>
+        $ cat R [TAB]<br/>
         $ cat README.md↵
       </p>
 
@@ -98,6 +119,8 @@ export default function Home() {
         onChange={handleChangeValue} // 改行が行われて変化が起こったとき
         value={value}
       />
+
+      <Cards show={show}/>
 
     </div>
   )
