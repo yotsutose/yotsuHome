@@ -7,19 +7,19 @@ export default function Card(props) {
     const contents = {
         "index.html": {
             "title": "About",
-            "text": ""
+            "text": "Name: Tomoya Sakabe"
         },
         "works.html": {
             "title": "Works",
-            "text": "bb"
+            "text": "Command HP(this), ソートなぞなそ, AR-SugarBox"
         },
         "history.html": {
             "title": "History",
-            "text": "cc"
+            "text": "2019-2023(expected): Nagoya Institute of Technology, Japan Bachelor of Computer Science"
         },
         "skills.html": {
             "title": "Skills",
-            "text": "cc"
+            "text": "C++, Typescript(Next.js), Ruby(Ruby on Rails)"
         }
     };
 
@@ -28,7 +28,7 @@ export default function Card(props) {
             <div className="card mx-auto" style={{"padding":"3px 0"}}>
                 <div className="card-body">
                     <h4 className="card-title">{contents[props.filename]["title"]}</h4>
-                    <p className="card-text">Some quick example text to build</p>
+                    <p className="card-text">{contents[props.filename]["text"]}</p>
                 </div>
             </div>
         </div>

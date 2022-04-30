@@ -80,7 +80,7 @@ export default function Home() {
     for(filename of filenames[pwd]){
       if(splitedLine[1]!=filename) continue;
       if(filename=='dir') continue;
-      if(filename=='README.md') return ['You can use commands (e.g. ls and cd and cat).'];
+      if(filename=='README.md') return ['You can use commands (e.g. ls and cd and cat).','Next, \"cd dir\"'];
       let memo = show;
       memo.push(filename);
       setShow(memo);
@@ -105,8 +105,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 style={{"padding": "2rem 0"}}></h1>
-      <h3>Example</h3>
+      <h1 style={{"padding": "2rem 0"}}>Are you a developer?</h1>
+      <h3>Examples of use</h3>
       <p>
         $ ls<br/>
         $ cat R [TAB]<br/>
