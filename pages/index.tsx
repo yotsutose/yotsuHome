@@ -92,7 +92,7 @@ export default function Home() {
   const Cards = ({ show }) => {
     const list = show.map(s => {
       return (
-        <Card filename={s}></Card>
+        <Card key={s.index} filename={s}></Card>
       );
     });
     return list;
